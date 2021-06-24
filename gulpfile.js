@@ -82,7 +82,7 @@ const tsBuild = () => {
 }
 
 const imgBuild = () => {
-    return gulp.src('app/images/*')
+    return gulp.src('app/images/**/*')
         .pipe(plumber())
         .pipe(imagemin())
         .pipe(gulp.dest('dist/images'))
