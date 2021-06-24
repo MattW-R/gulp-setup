@@ -1,6 +1,6 @@
 ### Setup
-- clone repo
-- run `npm install`
+- Clone repo
+- Run `npm install`
 
 ### File Structure
 
@@ -13,6 +13,7 @@
 
 ### Use
 
-- run `npm run watch` to load the background gulp task runner
-- run `npm run build-dev` to execute the gulp task runner & create a development build with debugging capabilities
-- run `npm run build` to execute the gulp task runner & create a final compact build
+- Run `npm run watch` to load the background gulp task runner
+- Run `npm run build-dev` to execute the gulp task runner & create a development build with debugging capabilities
+- Run `npm run build` to execute the gulp task runner & create a final compact build
+- Use the contents of `/dist/` for accessing/viewing the website after building
