@@ -12,22 +12,20 @@ const tsProject = ts.createProject('tsconfig.json')
 const imagemin = require('gulp-imagemin')
 const size = require('gulp-size')
 
-const clearBuildDir = (cb) => {
-    del('dist/*', {force:true})
-    return cb()
+const clearBuildDir = () => {
+    return del('dist/*', {force:true})
 }
 
-const htmlBuild = (cb) => {
-    gulp.src('app/**/*.html')
+const htmlBuild = () => {
+    return gulp.src('app/**/*.html')
         .pipe(size({title: 'html:'}))
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(size({title: 'min-html:'}))
         .pipe(gulp.dest('dist'))
-    return cb()
 }
 
-const sassBuildDev = (cb) => {
-    gulp.src('app/scss/*.scss')
+const sassBuildDev = () => {
+    return gulp.src('app/scss/*.scss')
         .pipe(sourcemaps.init())
         .pipe(size({title: 'scss:'}))
         .pipe(sass())
@@ -39,11 +37,10 @@ const sassBuildDev = (cb) => {
         .pipe(size({title: 'nano-css:'}))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('dist/css'))
-    return cb()
 }
 
-const tsBuildDev = (cb) => {
-    tsProject.src()
+const tsBuildDev = () => {
+    return tsProject.src()
         .pipe(sourcemaps.init())
         .pipe(size({title: 'ts:'}))
         .pipe(tsProject())
@@ -52,11 +49,10 @@ const tsBuildDev = (cb) => {
         .pipe(size({title: 'min-js:'}))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('dist/js'))
-    return cb()
 }
 
-const sassBuild = (cb) => {
-    gulp.src('app/scss/*.scss')
+const sassBuild = () => {
+    return gulp.src('app/scss/*.scss')
         .pipe(size({title: 'scss:'}))
         .pipe(sass())
         .pipe(autoprefixer({
@@ -66,11 +62,10 @@ const sassBuild = (cb) => {
         .pipe(cssnano())
         .pipe(size({title: 'nano-css:'}))
         .pipe(gulp.dest('dist/css'))
-    cb()
 }
 
-const tsBuild = (cb) => {
-    tsProject.src()
+const tsBuild = () => {
+    return tsProject.src()
         .pipe(size({title: 'ts:'}))
         .pipe(tsProject())
         .pipe(stripDebug())
@@ -78,14 +73,18 @@ const tsBuild = (cb) => {
         .pipe(minify())
         .pipe(size({title: 'min-js:'}))
         .pipe(gulp.dest('dist/js'))
-    cb()
 }
 
-const imgBuild = (cb) => {
-    gulp.src('app/images/*')
+const imgBuild = () => {
+    return gulp.src('app/images/*')
         .pipe(imagemin())
         .pipe(gulp.dest('dist/images'))
-    return cb()
+}
+
+const copyPublicDir = () => {
+    return gulp.src('public/**/*')
+        .pipe(size({title: 'copied public files:'}))
+        .pipe(gulp.dest('dist/'))
 }
 
 exports.watch = () => {
@@ -93,6 +92,7 @@ exports.watch = () => {
     gulp.watch('app/scss/**/*.scss', sassBuildDev)
     gulp.watch('app/ts/**/*.ts', tsBuildDev)
     gulp.watch('app/images/*', imgBuild)
+    gulp.watch('public/**/*', copyPublicDir)
 }
 exports.buildDev = gulp.series(clearBuildDir, htmlBuild, sassBuildDev, tsBuildDev, imgBuild)
-exports.build = gulp.series(clearBuildDir, htmlBuild, sassBuild, tsBuild, imgBuild)
+exports.build = gulp.series(clearBuildDir, htmlBuild, sassBuild, tsBuild, imgBuild, copyPublicDir)
