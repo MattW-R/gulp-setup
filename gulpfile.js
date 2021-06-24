@@ -11,6 +11,7 @@ const minify = require('gulp-uglify')
 const tsProject = ts.createProject('tsconfig.json')
 const imagemin = require('gulp-imagemin')
 const size = require('gulp-size')
+const plumber = require('gulp-plumber')
 
 const clearBuildDir = () => {
     return del('dist/*', {force:true})
@@ -18,6 +19,7 @@ const clearBuildDir = () => {
 
 const htmlBuild = () => {
     return gulp.src('app/**/*.html')
+        .pipe(plumber())
         .pipe(size({title: 'html:'}))
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(size({title: 'min-html:'}))
@@ -26,6 +28,7 @@ const htmlBuild = () => {
 
 const sassBuildDev = () => {
     return gulp.src('app/scss/*.scss')
+        .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(size({title: 'scss:'}))
         .pipe(sass())
@@ -41,6 +44,7 @@ const sassBuildDev = () => {
 
 const tsBuildDev = () => {
     return tsProject.src()
+        .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(size({title: 'ts:'}))
         .pipe(tsProject())
@@ -53,6 +57,7 @@ const tsBuildDev = () => {
 
 const sassBuild = () => {
     return gulp.src('app/scss/*.scss')
+        .pipe(plumber())
         .pipe(size({title: 'scss:'}))
         .pipe(sass())
         .pipe(autoprefixer({
@@ -66,6 +71,7 @@ const sassBuild = () => {
 
 const tsBuild = () => {
     return tsProject.src()
+        .pipe(plumber())
         .pipe(size({title: 'ts:'}))
         .pipe(tsProject())
         .pipe(stripDebug())
@@ -77,13 +83,14 @@ const tsBuild = () => {
 
 const imgBuild = () => {
     return gulp.src('app/images/*')
+        .pipe(plumber())
         .pipe(imagemin())
         .pipe(gulp.dest('dist/images'))
 }
 
 const copyPublicDir = () => {
     return gulp.src('public/**/*')
-        .pipe(size({title: 'copied public files:'}))
+        .pipe(plumber())
         .pipe(gulp.dest('dist/'))
 }
 
