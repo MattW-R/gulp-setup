@@ -101,5 +101,5 @@ exports.watch = () => {
     gulp.watch('app/images/*', imgBuild)
     gulp.watch('public/**/*', copyPublicDir)
 }
-exports.buildDev = gulp.series(clearBuildDir, htmlBuild, sassBuildDev, tsBuildDev, imgBuild)
+exports.buildDev = gulp.series(clearBuildDir, htmlBuild, sassBuildDev, tsBuildDev, imgBuild, copyPublicDir)
 exports.build = gulp.series(clearBuildDir, htmlBuild, sassBuild, tsBuild, imgBuild, copyPublicDir)
